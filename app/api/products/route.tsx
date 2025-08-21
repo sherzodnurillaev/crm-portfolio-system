@@ -1,0 +1,90 @@
+import { prisma } from "@/lib/prisma";
+
+export async function GET(req: Request) {
+    try {
+        const { searchParams } = new URL(req.url);
+
+        const category = searchParams.get("category");
+        const title = searchParams.get("title");
+
+        const products = await prisma.product.findMany({
+            where: {
+                ...(category ? { category } : {}),
+                ...(title ? { title: { contains: title, mode: "insensitive"} } : {}),
+            },
+        });
+
+        return new Response(JSON.stringify(products), {status: 200});
+    } catch (error) {
+        console.log(error);
+        return new Response("Error fetching products", { status: 500})
+        
+    }
+}
+
+export async function POST(req: Request) {
+    try {
+        const body = await req.json();
+        const { title, category, price, imagePath } = body;
+
+        if (!title || !category || !price || !imagePath) {
+            return new Response("Missing required fields", {status: 400})
+        }
+
+        const newProduct = await prisma.product.create({
+            data: { title, category, price:Number(price), imagePath },
+        })
+
+        return new Response(JSON.stringify(newProduct), { status: 201 });
+
+    } catch (error) {
+        console.error(error);
+        return new Response("Error creating product", { status: 500 });
+    }
+}
+
+export async function PUT(req: Request) {
+    try {
+        const body = await req.json();
+        const { id, title, category, price, imagePath } = body;
+
+        if (!id) {
+            return new Response("ID is required", {status: 400})
+        }
+
+        const updatedProduct = await prisma.product.update({
+            where: {id},
+            data: {
+                ...(title && {title}),
+                ...(category && {category}),
+                ...(price && { price }),
+                ...(imagePath && { imagePath }),
+            },
+        });
+
+        return new Response(JSON.stringify(updatedProduct), {status: 200});
+    } catch (error) {
+        console.error(error);
+        return new Response("Error updating product", {status: 500});
+    }
+}
+
+export async function DELETE(req: Request) {
+    try {
+        const {searchParams} = new URL(req.url)
+        const id = searchParams.get("id")
+
+        if (!id) {
+            return new Response("ID is required", { status: 400 });
+        }
+
+        await prisma.product.delete({
+            where: { id: Number(id) },
+        })
+
+        return new Response("Product delete", { status: 200 });
+    } catch (error) {
+        console.error(error);
+        return new Response("Error deleting product", { status: 500 })
+    }
+}
