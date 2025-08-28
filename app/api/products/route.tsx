@@ -53,7 +53,7 @@ export async function PUT(req: Request) {
         }
 
         const updatedProduct = await prisma.product.update({
-            where: {id},
+            where: {id: Number(id)},
             data: {
                 ...(title && {title}),
                 ...(category && {category}),

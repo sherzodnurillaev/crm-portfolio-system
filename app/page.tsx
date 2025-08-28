@@ -1,5 +1,5 @@
 import HomeProducts from "@/components/Home/HomePage";
-import Search from "@/components/Home/SearchInput";
+import Search from "@/components/ui/SearchInput";
 import { getProducts } from "@/lib/api/products";
 
 export interface Props {
@@ -15,7 +15,6 @@ export default async function Home({
 }: {
     searchParams: { title?: string; category?: string };
 }) {
-    // передаём параметры поиска в getProducts
     const data: Props[] = await getProducts({
         title: searchParams.title,
         category: searchParams.category,
@@ -23,7 +22,7 @@ export default async function Home({
 
     return (
         <div className="">
-            <h1>home page</h1>
+            <h1 className="text-[36px]">Home page</h1>
             <Search />
             <HomeProducts data={data} />
         </div>

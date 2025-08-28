@@ -16,9 +16,6 @@ interface HomeProductsProps {
 
 const HomeProducts = ({ data }: HomeProductsProps) => {
 
-    console.log(data);
-    
-    
     return (
         <div className="grid grid-cols-4 gap-5">
             {
