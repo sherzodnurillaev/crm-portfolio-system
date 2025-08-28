@@ -1,4 +1,4 @@
-import Search from "@/components/ui/SearchInput"
+import Search from "@/components/ui/SearchInput";
 import OrderProducts from "@/components/ProductsComp/OrderProducts";
 import { getProducts } from "@/lib/api/products";
 
@@ -10,22 +10,23 @@ export interface Props {
     imagePath: string;
 }
 
-export default async function products({
+export default async function Products({
     searchParams,
 }: {
-    searchParams: { title?: string; category?: string };
+    searchParams?: Promise<{ title?: string; category?: string }>;
 }) {
+    const resolvedParams = await searchParams; // дожидаемся Promise
+
     const data: Props[] = await getProducts({
-        title: searchParams.title,
-        category: searchParams.category,
+        title: resolvedParams?.title,
+        category: resolvedParams?.category,
     });
 
     return (
         <div className="">
             <h1 className="text-[36px]">Products page</h1>
-            <Search/>
+            <Search />
             <OrderProducts data={data} />
-            
         </div>
-    )
+    );
 }
