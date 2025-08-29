@@ -10,17 +10,16 @@ export interface Props {
   imagePath: string;
 }
 
-interface HomePageProps {
-  searchParams?: {
-    title?: string;
-    category?: string;
-  };
-}
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ title?: string; category?: string }>;
+}) {
+  const params = await searchParams;
 
-export default async function Home({ searchParams }: HomePageProps) {
   const data: Props[] = await getProducts({
-    title: searchParams?.title,
-    category: searchParams?.category,
+    title: params?.title ?? "",
+    category: params?.category ?? "",
   });
 
   return (

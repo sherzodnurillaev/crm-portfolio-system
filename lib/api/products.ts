@@ -33,6 +33,8 @@ export async function getProducts(params?: { title?: string; category?: string }
     const url = query.toString()
         ? `${API_URL}?${query.toString()}`
         : API_URL;
+        console.log(url);
+        
 
     const res = await fetch(url, { cache: 'no-store' });
 
