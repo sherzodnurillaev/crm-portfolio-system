@@ -6,7 +6,7 @@ export interface Product {
     imagePath?: string 
 }
 
-const API_URL = 'http://localhost:3000/api/products'
+const API_URL = '/api/products'
 
 export async function createProduct(product: Product) {
     const res = await fetch(API_URL, {
