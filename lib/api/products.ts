@@ -6,7 +6,7 @@ export interface Product {
     imagePath?: string 
 }
 
-const API_URL = '/api/products'
+const API_URL = 'https://crm-portfolio-system.vercel.app/api/products'
 
 export async function createProduct(product: Product) {
     const res = await fetch(API_URL, {
