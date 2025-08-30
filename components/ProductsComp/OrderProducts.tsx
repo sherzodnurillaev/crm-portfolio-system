@@ -36,16 +36,33 @@ const OrderProducts = ({ data }: HomeProductsProps) => {
 
 const handleSubmit = async (product: Product) => {
   try {
+    let res;
     if (selectedProduct) {
-      const updated = await updateProduct({ ...product, id: selectedProduct.id });
-      setProducts(products.map(p => p.id === updated.id ? updated : p));
+      res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...product, id: selectedProduct.id }),
+      });
     } else {
-      const created = await createProduct(product);
-      setProducts([...products, created]);
+      res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      });
     }
+
+    if (!res.ok) throw new Error("Ошибка при сохранении");
+
+    const data = await res.json();
+    if (selectedProduct) {
+      setProducts(products.map(p => p.id === data.id ? data : p));
+    } else {
+      setProducts([...products, data]);
+    }
+
     setIsModalOpen(false);
   } catch (err) {
-    console.error("Ошибка при сохранении", err);
+    console.error(err);
   }
 };
 

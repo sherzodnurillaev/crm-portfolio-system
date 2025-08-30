@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
@@ -23,24 +24,20 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    try {
-        const body = await req.json();
-        const { title, category, price, imagePath } = body;
-
-        if (!title || !category || !price || !imagePath) {
-            return new Response("Missing required fields", {status: 400})
-        }
-
-        const newProduct = await prisma.product.create({
-            data: { title, category, price:Number(price), imagePath },
-        })
-
-        return new Response(JSON.stringify(newProduct), { status: 201 });
-
-    } catch (error) {
-        console.error(error);
-        return new Response("Error creating product", { status: 500 });
-    }
+  try {
+    const body = await req.json();
+    const product = await prisma.product.create({
+      data: {
+        title: body.title,
+        category: body.category,
+        price: body.price,
+        imagePath: body.imagePath,
+      },
+    });
+    return NextResponse.json(product);
+  } catch (error) {
+    return NextResponse.json({ error: "Ошибка при создании продукта" }, { status: 500 });
+  }
 }
 
 export async function PUT(req: Request) {

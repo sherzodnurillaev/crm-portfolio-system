@@ -13,10 +13,16 @@ export interface Props {
 export default async function Products({ searchParams }: { searchParams?: Promise<Record<string, string>> }) {
     const params = await searchParams;
 
-    const data: Props[] = await getProducts({
+    const data: Props[] = (await getProducts({
         title: params?.title,
         category: params?.category,
-    });
+    })).map(product => ({
+        id: product.id,
+        title: product.title,
+        category: product.category,
+        price: product.price,
+        imagePath: product.imagePath ?? "", // если null → пустая строка
+    }));
 
     return (
         <div className="">

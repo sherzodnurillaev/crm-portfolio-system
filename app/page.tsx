@@ -17,10 +17,16 @@ export default async function Home({
 }) {
   const params = await searchParams;
 
-  const data: Props[] = await getProducts({
-    title: params?.title ?? "",
-    category: params?.category ?? "",
-  });
+  const data: Props[] = (await getProducts({
+      title: params?.title,
+      category: params?.category,
+  })).map(product => ({
+      id: product.id,
+      title: product.title,
+      category: product.category,
+      price: product.price,
+      imagePath: product.imagePath ?? "", // если null → пустая строка
+  }));
 
   return (
     <div>
