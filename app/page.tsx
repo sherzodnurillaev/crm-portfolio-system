@@ -13,19 +13,29 @@ export interface Props {
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ title?: string; category?: string }>;
+  searchParams?: { title?: string; category?: string };
 }) {
-  const params = await searchParams;
+  const params = searchParams ?? {};
 
-  const data: Props[] = (await getProducts({
-      title: params?.title,
-      category: params?.category,
-  })).map(product => ({
-      id: product.id,
-      title: product.title,
-      category: product.category,
-      price: product.price,
-      imagePath: product.imagePath ?? "", // если null → пустая строка
+  let products: any[] = [];
+  try {
+    const response = await getProducts({
+      title: params.title,
+      category: params.category,
+    });
+
+    products = Array.isArray(response) ? response : [];
+  } catch (err) {
+    console.error("Ошибка при получении продуктов:", err);
+    products = [];
+  }
+
+  const data: Props[] = products.map((product) => ({
+    id: product.id,
+    title: product.title,
+    category: product.category,
+    price: product.price,
+    imagePath: product.imagePath ?? "",
   }));
 
   return (
