@@ -30,6 +30,8 @@ export default async function Home({
     products = [];
   }
 
+  "fix bag"
+
   const data: Props[] = products.map((product) => ({
     id: product.id,
     title: product.title,
