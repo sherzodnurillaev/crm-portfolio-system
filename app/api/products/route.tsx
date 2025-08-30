@@ -67,21 +67,11 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-    try {
-        const {searchParams} = new URL(req.url)
-        const id = searchParams.get("id")
+  const url = new URL(req.url);
+  const id = Number(url.searchParams.get("id"));
 
-        if (!id) {
-            return new Response("ID is required", { status: 400 });
-        }
+  if (!id) return NextResponse.json({ error: "ID обязателен" }, { status: 400 });
 
-        await prisma.product.delete({
-            where: { id: Number(id) },
-        })
-
-        return new Response("Product delete", { status: 200 });
-    } catch (error) {
-        console.error(error);
-        return new Response("Error deleting product", { status: 500 })
-    }
+  await prisma.product.delete({ where: { id } });
+  return NextResponse.json({ success: true });
 }

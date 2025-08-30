@@ -17,7 +17,7 @@ const OrderProducts = ({ data }: HomeProductsProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteProduct(id);
+      await deleteProduct(id); // теперь fetch к API
       setProducts(products.filter((p) => p.id !== id));
     } catch (error) {
       console.error("Ошибка при удалении", error);

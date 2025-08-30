@@ -50,7 +50,7 @@ export async function updateProduct(product: Product) {
 
 // Удаление продукта
 export async function deleteProduct(id: number) {
-    return prisma.product.delete({
-        where: { id },
-    });
+  const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Ошибка при удалении товара");
+  return res.json();
 }
